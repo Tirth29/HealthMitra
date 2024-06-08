@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HealthMitra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+      .logo {
+        color: black;
+        margin: 0 20px;
+      }
+      .myimg {
+        width: 120px;
+        height: 70px;
+      }
+      .info-button {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.25rem;
+        margin-bottom: 20px;
+        border-radius: 10px;
+      }
+      .info-section {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+    <div class="container-fluid">
+        <!-- Image on the left side -->
+        <div class="logo">
+            <img class="myimg" src="{{url_for('static', filename='img.png')}}" alt="">
+        </div>
+
+        <!-- Button for toggling collapsed navigation -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Content on the right side -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 fs-5 mb-lg-0  " style="margin-right: 100px">
+                <li class="nav-item" style="margin-right: 20px;">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item" style="margin-right: 20px;">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item" style="margin-right: 20px;">
+                    <a class="nav-link" href="/contact">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    <h1 class="text-center text-primary fw-bold fs-1">HealthMitra</h1>
+    <div class="dropdown ms-5">
+        <div class="ms-3">
+        <button class="btn btn-secondary dropdown-toggle py-3 px-4 ms-5" type="button" data-bs-toggle="dropdown" aria-expanded="false">Symptoms list</button>
+        <ul class="dropdown-menu pre-scrollable" style="max-height: 500px; overflow-y: auto;">
+            {% for i in symptoms_dict.keys(): %}
+                <li><span class="dropdown-item-text">{{i}}</span></li>
+            {% endfor %}
+        </ul>
+        </div>
+    </div>
+
+    <div class="container mt-4 my-4 bg-dark text-light rounded-3 p-3">
+      <form action="/predict" method="post">
+        <div class="form-group">
+          <label class="mb-3" for="symptoms">Type Symptoms</label>
+          <input type="text" class="form-control" name="symptoms" value="{{symptoms}}" placeholder="Use symptoms like itching, vomiting, cough, fever ...">
+          <br>
+          <button class="btn btn-info mb-2 fw-semibold fs-5 px-4 py-2">Recommendation</button>
+        </div>
+      </form>
+    </div>
+
+    {% if pred_disease %}
+    <h1 class="text-center text-primary fw-bold fs-1 mt-4 my-4">Our AI Doctor Results</h1>
+    <div class="container bg-light rounded-3 p-4">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <button class="info-button">Disease</button>
+          <p>{{ pred_disease }}</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <button class="info-button">Description</button>
+          <p>{{ desc }}</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <button class="info-button">Precautions</button>
+          <ul>
+            {% for i in pre %}
+              <li>{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <button class="info-button">Medications</button>
+          <ul>
+            {% for i in med %}
+              <li>{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <button class="info-button">Workouts</button>
+          <ul>
+            {% for i in wrkout %}
+              <li>{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <button class="info-button">Diets</button>
+          <ul>
+            {% for i in die %}
+              <li>{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+      </div>
+    </div>
+    {% endif %}
+    {% if error %}
+        <p style="color:red;" class="text-center fs-2 ">OPPS! {{ error }}</p>
+    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
